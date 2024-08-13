@@ -1,6 +1,10 @@
 const Post = require("../models/posts");
-
+const jwtSign = util.promisify(sign);
+const util = require("util");
+const jwtVerify = util.promisify(verify);
 exports.getPosts = async (req, res) => {
+  const { authorization: token } = req.headers;
+  await jwtVerify(token, "secret");
   const posts = await Post.find();
   res.send(posts);
 };
